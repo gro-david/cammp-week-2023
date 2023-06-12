@@ -9,7 +9,7 @@ import timeit
 import time
 
 # intialize workpiece with length 50 and radius 5
-wp = Workpiece(1000000, 10)
+wp = Workpiece(1000000, 5)
 
 raw_format = np.array([1, 4, 6, 4, 1, 0, 0, 0, 1, 4, 6, 4, 1])
 print(f'array size . {raw_format.size}')
