@@ -11,9 +11,10 @@ class Workpiece:
     
     # sets the correct dimensions of the plot and plots the workpiece
     def visualize(self):
+        #plt.label("workpiece")
         plt.plot(self.array)
         plt.xlim(0, self.length)
-        plt.ylim(0, self.radius * 2)
+        plt.ylim(0, self.radius *2)
 
     # point is the index of the slice, depth the y-coordinate of the cut
     def cut(self, point: int, depth: float):
