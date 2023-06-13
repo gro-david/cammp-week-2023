@@ -97,8 +97,8 @@ class SVGFormater:
         with open(url, "w") as file:
             file.write(data)
 
-SVGFormater = SVGFormater()
-data = SVGFormater.get_form_val(url='smiley.svg')
+# SVGFormater = SVGFormater()
+# data = SVGFormater.get_form_val(url='smiley.svg')
 
 # SVGFormater.create_file("test.svg", "heights", np.array([5,5,5,55]))
 # SVGFormater.create_form_file("form_test.svg", \
