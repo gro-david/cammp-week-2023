@@ -93,24 +93,27 @@ def deez_nuts(coords: (), r: int, scale: int, down=False):
 
     return (X,Y,Z)
 ##########################################
-scale = 30
+scale = 100
 R, r = 5,2
 ##########################################
 
-# X1,Y1,Z1 = elmos_half_donut(R,r,scale, down=False)
-# X2,Y2,Z2 = elmos_half_donut(R,r,scale, down=True)
+X1,Y1,Z1 = elmos_half_donut(R,r,scale, down=False)
+X2,Y2,Z2 = elmos_half_donut(R,r,scale, down=True)
 
-# fig = plt.figure()
-# ax1 = fig.add_subplot(121, projection='3d')
-# ax1.set_zlim(-1*R,R)
+fig = plt.figure()
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.set_zlim(-1*R,R)
 
-# ax1.scatter(X1, Y1, Z1, color ="blue")
-# ax1.scatter(X2, Y2, Z2, color = "red")
+ax1.scatter(X1, Y1, Z1, color ="blue")
+ax1.scatter(X2, Y2, Z2, color = "red")
 
-# ax1.view_init(36, 26)
+ax1.view_init(36, 26)
 # plt.show()
 
-#########################################
+##########################################
+scale = 100
+R, r = 5,2
+##########################################
 
 X1,Y1,Z1 = deez_balls((R,R), R, scale)
 X2,Y2,Z2 = deez_nuts((R*2,R*2), R, scale)
