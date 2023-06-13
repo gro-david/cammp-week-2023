@@ -1,0 +1,39 @@
+% CAMMP Settings
+% Pascal Richter [richter@mathcces.rwth-aachen.de]
+% MathCCES, RWTH Aachen University, September 2015
+
+\definecolor{kit-green100}{rgb}{0,.59,.51}
+% -----------------------------------------------------------------------------------------------
+\gdef\CAMMPweekName{CAMMP week 2023}%CAMMP week 2016  |  MINT-EC-Akademie
+\gdef\CAMMPweekSubname{powered by B\"urgerstiftung}%powered by B\"urgerstiftung  |  CAMMP week 2015
+\gdef\CAMMPweekDate{11. Juni - 16. Juni 2023}
+\gdef\CAMMPweekPlace{Voeren (Belgien)}%Voeren (Belgien)  |  Aachen
+\gdef\setHeaderAsCAMMPweek{\setHeader{\color{rwth-blue}\bfseries\huge\CAMMPweekName\\ \normalsize\CAMMPweekSubname}}
+
+\gdef\CAMMPpartner{
+		\includegraphics[height=5ex]{logo/s_buergerstiftung} \hfill
+		\includegraphics[height=5ex]{logo/s_ANTalive} \hfill
+%		\includegraphics[height=5ex]{logo/s_oxy} \hfill
+		\includegraphics[height=5ex]{logo/s_SimulierteWelten} \hfill
+	        \includegraphics[height=6ex]{logo/s_MinisteriumBildungForschung.png} \hfill
+%		\includegraphics[height=4ex]{logo/s_mecheng} \hfill
+%		\includegraphics[height=4ex]{logo/s_schulprojektstelle}
+		%\includegraphics[height=5ex]{logo/s_SparkasseAachen} \hfill
+		\includegraphics[height=5ex]{logo/s_StadtAachen} \hfill
+%		\includegraphics[height=4ex]{logo/s_MathWorks}
+}
+
+\gdef\setFooterAsCAMMPpartner{
+	\addtolength{\textheight}{-8mm}
+	\addtolength{\footskip}{11mm}
+	\setFooter{\CAMMPpartner}
+}
+
+\gdef\setHalfPage{
+	\setlength{\paperheight}{148.5mm}
+	\setlength{\textheight}{105mm}
+}
+
+% -----------------------------------------------------------------------------------------------
+% END
+\endinput

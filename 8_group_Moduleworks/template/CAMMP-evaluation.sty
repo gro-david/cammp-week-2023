@@ -1,0 +1,79 @@
+% CAMMP-evaluation.sty
+%
+% Pascal Richter (richter@mathcces.rwth-aachen.de)
+% 2014/11/22
+%
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{CAMMP-evaluation}[2014/11/22 CAMMP Evaluation]
+
+% von hier aus CAMMP-article.sty
+% -----------------------------------------------------------------------------------------------
+% Packages
+\RequirePackage[left=18mm,right=18mm,bottom=2.6cm,head=2.6cm]{geometry}
+\RequirePackage{etoolbox}
+	\newcommand{\ifstrequals}{\expandafter\ifstrequal\expandafter}
+
+
+% -- Settings --------------------------------------------------------%
+\renewcommand{\rmdefault}{phv} % Arial
+\renewcommand{\sfdefault}{phv} % Arial
+\setlength\parindent{0pt}
+\parskip2ex
+\date{}
+
+
+% -- Commands --------------------------------------------------------%
+\newcommand{\barchart}[5]{%
+	\begin{tikzpicture}
+		\begin{axis}[width={#1}, height=6cm, ybar, ymajorgrids, xtick=data,
+			legend style={at={(0.5,1.2)}, anchor=north,legend columns=-1},
+			enlargelimits=false, enlarge x limits={rel=0.2}, ymin=0, enlarge y limits={rel=0.1, upper},
+			ylabel={#2}, symbolic x coords={a,b,c,d,e,f,g,h,i,j}, xticklabels={#3}, bar width={#1/3/#4}]
+				#5
+		\end{axis}
+	\end{tikzpicture}
+}
+
+\newcommand{\barchartStacked}[6]{%
+	\begin{tikzpicture}
+		\begin{axis}[width={#1}, height=6cm, ybar stacked, ymajorgrids, xtick=data, xticklabel style={yshift=-1.5mm},
+			legend style={at={(0.5,1.2)}, anchor=north,legend columns=-1},
+			enlargelimits=false, enlarge x limits={rel=0.3}, ymin=0, enlarge y limits={rel=0.1, upper},
+			ylabel={#2}, symbolic x coords={a,b,c,d,e,f,g,h,i,j}, xticklabels={#3}, bar width={#1/3/#4},
+			title={\ifstrempty{#5}{}{\fbox{#5}}}]
+				#6
+		\end{axis}
+	\end{tikzpicture}
+}
+
+\newcommand{\drawText}[3]{%
+	\ifstrempty{#3}{}{{\bf #1\enspace(Jgst.: #2):} \parbox[t]{{\textwidth}-3cm}{#3.}\par}
+}
+
+% answers evaluation bei Anzahl der Multiplechoicefragen-Antwortmöglichkeiten = 4
+\def\oneoffour{{\boldmath$--$}}
+\def\twooffour{{\boldmath$-$}}
+\def\threeoffour{{\boldmath$+$}}
+\def\fouroffour{{\boldmath$++$}}
+
+% answers evaluation bei Anzahl der Multiplechoicefragen-Antwortmöglichkeiten = 5
+\def\oneoffive{{\boldmath$--$}}
+\def\twooffive{{\boldmath$-$}}
+\def\threeoffive{{\boldmath$\ocircle$}}
+\def\fouroffive{{\boldmath$+$}}
+\def\fiveoffive{{\boldmath$++$}}
+
+% MC-answers evaluation
+\def\One{{\boldmath$A$}}
+\def\Two{{\boldmath$B$}}
+\def\Three{{\boldmath$C$}}
+\def\Four{{\boldmath$D$}}
+\def\Five{{\boldmath$E$}}
+\def\Six{{\boldmath$F$}}
+\def\Seven{{\boldmath$G$}}
+\def\Eight{{\boldmath$H$}}
+
+
+% -----------------------------------------------------------------------------------------------
+% END
+\endinput

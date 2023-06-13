@@ -1,0 +1,27 @@
+\frametitle{Gestapeltes Balkendiagramm}
+	\pgfplotstableread{
+			Criterion      $Fahrt_1Klasse_1$     $Fahrt_2Klasse_1$    $Fahrt_3Klasse_1$    $Fahrt_4Klasse_2$
+			Diff:+200        0   200   100     0
+			Diff:-100        50    0     0     0
+			Diff:-100        0     0     0   150
+		}\DatenStartVerteilung
+	\begin{center}
+			\begin{tikzpicture}
+				  \begin{axis}[ybar=0pt,
+				    ybar stacked,bar shift=0pt,
+				    xticklabels from table={\DatenStartVerteilung}{Criterion},
+				    xtick=data,
+				    legend style={at={(1.025,1.0)},anchor=north west},
+				    xlabel=Endergebnis]
+				    \pgfplotstableforeachcolumn\DatenStartVerteilung\as\col{
+				        \ifnum\pgfplotstablecol=0
+				        \else
+				        \edef\tmp{
+				            \noexpand\addplot table [x expr=\noexpand\coordindex,y=\col] {\noexpand\DatenStartVerteilung};
+				            \noexpand\addlegendentry {\col}
+				        }
+				        \tmp
+				        \fi}
+				  \end{axis}
+			\end{tikzpicture}
+	\end{center}

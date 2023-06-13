@@ -1,0 +1,156 @@
+% rwth-base.sty
+%
+% Dieses Paket ist im Auftrag der RWTH Aachen entstanden.
+% Sie dient der Umsetzung des Corporate Design der RWTH in LaTeX.
+% 
+% Dieses Paket wird in der Klasse rwth-letter(.cls) verwendet.
+%
+% Autor: Jens Dodenhoff (jens.dodenhoff@rwth-aachen.de)
+% 
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{rwth-base}[2013/11/25 RWTH Base Package (Colours/Fontstyle)]
+\newif\ifams\amstrue
+\newif\ifmathtext\mathtextfalse
+\newif\ifresize\resizetrue
+\newif\ifother\othertrue
+\newif\ifchangefont\changefonttrue
+\DeclareOption{ams}{\amstrue}
+\DeclareOption{mathtext}{\mathtexttrue}
+\providecommand{\@docencoding}{utf8}% das folgende nur um vorausschauend zu sein, utf8 sollte aber reichen
+\DeclareOption{ansinew}{\def\@docencoding{ansinew}}
+\DeclareOption{applemac}{\def\@docencoding{applemac}}
+\DeclareOption{ascii}{\def\@docencoding{ascii}}
+\DeclareOption{cp1250}{\def\@docencoding{cp1250}}
+\DeclareOption{cp1252}{\def\@docencoding{cp1252}}
+\DeclareOption{cp437de}{\def\@docencoding{cp437de}}
+\DeclareOption{cp437}{\def\@docencoding{cp437}}
+\DeclareOption{cp850}{\def\@docencoding{cp850}}
+\DeclareOption{cp852}{\def\@docencoding{cp852}}
+\DeclareOption{cp865}{\def\@docencoding{cp865}}
+\DeclareOption{decmulti}{\def\@docencoding{decmulti}}
+\DeclareOption{latin1}{\def\@docencoding{latin1}}
+\DeclareOption{latin2}{\def\@docencoding{latin2}}
+\DeclareOption{latin3}{\def\@docencoding{latin3}}
+\DeclareOption{latin4}{\def\@docencoding{latin4}}
+\DeclareOption{latin5}{\def\@docencoding{latin5}}
+\DeclareOption{latin9}{\def\@docencoding{latin9}}
+\DeclareOption{next}{\def\@docencoding{next}}
+\DeclareOption{utf8}{\def\@docencoding{utf8}}
+\DeclareOption{colors}{\resizefalse\changefontfalse\otherfalse}
+\DeclareOption*{\PackageWarning{rwth-base}{Unknown option ‘\CurrentOption’}}
+\ProcessOptions\relax
+\ifmathtext\RequirePackage{mathtext}[1999/01/28]\fi
+\ifams\RequirePackage{amsmath}[2000/07/18]\RequirePackage{amsthm}\RequirePackage{amssymb}[2009/06/22]\fi
+\RequirePackage[T1]{fontenc}[2005/09/27]
+\RequirePackage[\@docencoding]{inputenc}[1995/12/01]
+\RequirePackage{xcolor}[2007/01/21]
+% RWTH und weitere Farben 
+%\definecolor{rwth-blue}{cmyk}{1,.5,0,0}\colorlet{rwth-lblue}{rwth-blue!50}\colorlet{rwth-llblue}{rwth-blue!25}
+\definecolor{rwth-blue}{HTML}{00549F}\definecolor{rwth-lblue}{HTML}{8EBAE5}\definecolor{rwth-llblue}{HTML}{C7DDF2}
+\definecolor{rwth-violet}{cmyk}{.6,.6,0,0}\colorlet{rwth-lviolet}{rwth-violet!50}\colorlet{rwth-llviolet}{rwth-violet!25}
+\definecolor{rwth-purple}{cmyk}{.7,1,.35,.15}\colorlet{rwth-lpurple}{rwth-purple!50}\colorlet{rwth-llpurple}{rwth-purple!25}
+\definecolor{rwth-carmine}{cmyk}{.25,1,.7,.2}\colorlet{rwth-lcarmine}{rwth-carmine!50}\colorlet{rwth-llcarmine}{rwth-carmine!25}
+\definecolor{rwth-red}{cmyk}{.15,1,1,0}\colorlet{rwth-lred}{rwth-red!50}\colorlet{rwth-llred}{rwth-red!25}
+\definecolor{rwth-magenta}{cmyk}{0,1,.25,0}\colorlet{rwth-lmagenta}{rwth-magenta!50}\colorlet{rwth-llmagenta}{rwth-magenta!25}
+\definecolor{rwth-orange}{cmyk}{0,.4,1,0}\colorlet{rwth-lorange}{rwth-orange!50}\colorlet{rwth-llorange}{rwth-orange!25}
+\definecolor{rwth-yellow}{cmyk}{0,0,1,0}\colorlet{rwth-lyellow}{rwth-yellow!50}\colorlet{rwth-llyellow}{rwth-yellow!25}
+\definecolor{rwth-grass}{cmyk}{.35,0,1,0}\colorlet{rwth-lgrass}{rwth-grass!50}\colorlet{rwth-llgrass}{rwth-grass!25}
+\definecolor{rwth-green}{cmyk}{.7,0,1,0}\colorlet{rwth-lgreen}{rwth-green!50}\colorlet{rwth-llgreen}{rwth-green!25}
+\definecolor{rwth-cyan}{cmyk}{1,0,.4,0}\colorlet{rwth-lcyan}{rwth-cyan!50}\colorlet{rwth-llcyan}{rwth-cyan!25}
+\definecolor{rwth-teal}{cmyk}{1,.3,.5,.3}\colorlet{rwth-lteal}{rwth-teal!50}\colorlet{rwth-llteal}{rwth-teal!25}
+\definecolor{rwth-silver}{cmyk}{.39,.31,.32,.14}
+\definecolor{rwth-gold}{cmyk}{.35,.46,.7,.35}
+\def\blue#1{\textcolor{rwth-blue}{#1}}\renewcommand{\blue}[2][100]{\textcolor{rwth-blue!#1}{#2}}
+\def\violet#1{\textcolor{rwth-violet}{#1}}\renewcommand{\violet}[2][100]{\textcolor{rwth-violet!#1}{#2}}
+\def\purple#1{\textcolor{rwth-purple}{#1}}\renewcommand{\purple}[2][100]{\textcolor{rwth-purple!#1}{#2}}
+\def\carmine#1{\textcolor{rwth-carmine}{#1}}\renewcommand{\carmine}[2][100]{\textcolor{rwth-carmine!#1}{#2}}
+\def\red#1{\textcolor{rwth-red}{#1}}\renewcommand{\red}[2][100]{\textcolor{rwth-red!#1}{#2}}
+\def\magenta#1{\textcolor{rwth-magenta}{#1}}\renewcommand{\magenta}[2][100]{\textcolor{rwth-magenta!#1}{#2}}
+\def\orange#1{\textcolor{rwth-orange}{#1}}\renewcommand{\orange}[2][100]{\textcolor{rwth-orange!#1}{#2}}
+\def\yellow#1{\textcolor{rwth-yellow}{#1}}\renewcommand{\yellow}[2][100]{\textcolor{rwth-yellow!#1}{#2}}
+\def\grass#1{\textcolor{rwth-grass}{#1}}\renewcommand{\grass}[2][100]{\textcolor{rwth-grass!#1}{#2}}
+\def\green#1{\textcolor{rwth-green}{#1}}\renewcommand{\green}[2][100]{\textcolor{rwth-green!#1}{#2}}
+\def\cyan#1{\textcolor{rwth-cyan}{#1}}\renewcommand{\cyan}[2][100]{\textcolor{rwth-cyan!#1}{#2}}
+\def\teal#1{\textcolor{rwth-teal}{#1}}\renewcommand{\teal}[2][100]{\textcolor{rwth-teal!#1}{#2}}
+\def\silver#1{\textcolor{rwth-silver}{#1}}\renewcommand{\silver}[2][100]{\textcolor{rwth-silver!#1}{#2}}
+\def\gold#1{\textcolor{rwth-gold}{#1}}\renewcommand{\gold}[2][100]{\textcolor{rwth-gold!#1}{#2}}
+\def\black#1{\textcolor{black}{#1}}\renewcommand{\black}[2][100]{\textcolor{black!#1}{#2}}
+\def\white#1{\textcolor{white}{#1}}
+% Schriftfamilie Helvetica (statt Arial)
+% mathe symbole
+\ifchangefont
+\def\rmdefault{phv} 
+\def\sfdefault{phv} 
+\def\bfdefault{b} 
+\DeclareMathVersion{normal}
+\DeclareSymbolFont{operators}{OT1}{cmss}{m}{n}
+\DeclareSymbolFont{letters}{OML}{\sfdefault}{m}{it}
+\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{OT1}{cmss}{b}{n}
+\SetSymbolFont{letters}{bold}{OML}{\sfdefault}{b}{it}
+% mathe symbole zu latex standard fonts
+\DeclareSymbolFont{symbols}{OMS}{cmsy}{m}{n}
+\DeclareSymbolFont{largesymbols}{OMX}{cmex}{m}{n}
+\def\familydefault{\sfdefault}
+\normalfont
+\fi
+% schriftweiten
+\ifresize
+\def\tiny{\fontsize{5pt}{6pt}\selectfont}
+\def\scriptsize{\fontsize{6pt}{8pt}\selectfont}		% wie viel zeilenhoehe?
+\def\footnotesize{\fontsize{7pt}{11pt}\selectfont}
+\def\small{\fontsize{8.5pt}{12pt}\selectfont}
+\def\normalsize{\fontsize{11pt}{13pt}\selectfont}
+\def\large{\fontsize{12pt}{14pt}\selectfont}
+\def\Large{\fontsize{14pt}{18pt}\selectfont}
+\def\LARGE{\fontsize{19pt}{22.5pt}\selectfont}
+\def\huge{\fontsize{20}{26pt}\selectfont}
+\def\Huge{\fontsize{25}{30pt}\selectfont}
+\def\HUGE{\fontsize{36pt}{43pt}\selectfont}
+\def\baselinestretch{1}\normalsize
+\fi
+
+
+\endinput
+% sonstiges aus der article.cls
+\ifother
+\setlength\leftmargini  {2.5em}
+\leftmargin  \leftmargini
+\setlength\leftmarginii  {2.2em}
+\setlength\leftmarginiii {1.87em}
+\setlength\leftmarginiv  {1.7em}
+\setlength\leftmarginv  {1em}
+\setlength\leftmarginvi {1em}
+\setlength  \labelsep  {.5em}
+\setlength  \labelwidth{\leftmargini}
+\addtolength\labelwidth{-\labelsep}
+\@beginparpenalty -\@lowpenalty
+\@endparpenalty   -\@lowpenalty
+\@itempenalty     -\@lowpenalty
+\renewcommand\theenumi{\@arabic\c@enumi}
+\renewcommand\theenumii{\@alph\c@enumii}
+\renewcommand\theenumiii{\@roman\c@enumiii}
+\renewcommand\theenumiv{\@Alph\c@enumiv}
+\newcommand\labelenumi{\theenumi.}
+\newcommand\labelenumii{(\theenumii)}
+\newcommand\labelenumiii{\theenumiii.}
+\newcommand\labelenumiv{\theenumiv.}
+\renewcommand\p@enumii{\theenumi}
+\renewcommand\p@enumiii{\theenumi(\theenumii)}
+\renewcommand\p@enumiv{\p@enumiii\theenumiii}
+\newcommand\labelitemi{\textbullet}
+\newcommand\labelitemii{\normalfont\bfseries \textendash}
+\newcommand\labelitemiii{\textasteriskcentered}
+\newcommand\labelitemiv{\textperiodcentered}
+\fi
+% table
+\newcounter{table}
+\def\ext@table{}
+\setlength\arraycolsep{5pt}
+\setlength\tabcolsep{6pt}
+\setlength\arrayrulewidth{.4pt}
+% figure
+\newcounter{figure}
+\def\ext@figure{}
+\let\@currsize\normalsize
+\endinput
