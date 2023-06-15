@@ -101,4 +101,5 @@ This results in the following plot:
 ![Fehlender Plot!]()
 
 ### Results and Problems
-As seen 
+The results for the cross-section (the 2D-plot) of the workingpiece do work, altough with very low resolution. To up the resolution without relying on interpolation, we would have to add more points to the matrix of the tool.
+Here we are hardware limited, as the matrices for both, workpiece and tool are loaded directly into the RAM of the PC. With possible millions of points to model round corners, a huge amount of RAM could be needed. This is not realistic and would mean high computational cost for a possibly simple render.
