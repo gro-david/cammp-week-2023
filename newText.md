@@ -69,7 +69,42 @@ The resulting hight-matrix can be used to plot the processed workpiece.
 
 ![show stair stepping graph]()
 
-The heavey stair-stepping is a result of our low resolution tool. by interpolating points between the target points, we where able to smooth the graph and give it a more realistic look. 
+The remainging problem is that our final tool would be a torus and our code still cannot visualize round corners perfectly. To get rid of the step shape we implemented a custom smoothing algorithm.
+
+```
+for j in range(modified_raw_form[i][1]):
+    if smooth:
+        try:
+            # smooth between the two points with the given offsets
+            x0 = modified_raw_form[i][0]
+            x1 = modified_raw_form[i + 1][0]
+            step = (x1 - x0) / (modified_raw_form[i][1] + 1)  # Include both endpoints
+            local_raw_form.append(x0 + step * j)
+        except IndexError:
+            print("error")
+    else:
+        # just add the current point
+        local_raw_form.append(raw_form[i][0])
+```
+And more importantly on day two we moved away from the offset based tool creation system, which seemed like a good idea to get started on day one, but later it turned out to be very impractical. To solve this we rewrote great parts of the tool code. This incorporated a dataformat change from a point-point format to a vector-format. We also removed the previously mentioned smoothing code which got unnecesary with the voctorization. We instead needed to implement a interpolation algorithm. First we wanted to make this custom, but then decided for using the numpy.interp function.
+
+```
+def interpolate(self, raw_form):
+        modified_raw_form = np.array([])
+        x_coords2interp = np.array([i for i in range(self.wp_length)])
+        x_coords = np.array([0])
+        y_coords = np.array([0])
+
+        for i, _ in enumerate(raw_form):
+            x_coords = np.append(x_coords, raw_form[i].x)
+            y_coords = np.append(y_coords, raw_form[i].y)
+        x_coords = np.append(x_coords, self.wp_length)
+        y_coords = np.append(y_coords, 0)
+
+        modified_raw_form = -np.interp(x_coords2interp, x_coords, y_coords)
+        return modified_raw_form
+```
+
 
 ![get pic of smooth graph]()
 
