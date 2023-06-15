@@ -16,9 +16,9 @@ The contour can be controlled by moving the tool. It was profecient for us to mo
 Due to the workpiece spinning at high speeds around the $x$-axis, one could simplify the model by assuming the speed as infinite, rendering the workpiece a geometrical zylinder.
 The cuttingdepth is limited by the rotation-axis $x$ and the radius $r$ or hight of the zylinder.
 
-## First approach
+## I. First approach
 As the workpiece is spinning at infinite speed, all changes made at a position $x$ will be applied around the zylinder. It is fully symmetrical. Thus, the 3D-form of the tool should not make a difference, as only it's deepest cuts have to be taken into account.
-This would allow to simplify the model further. Representing the workpiece and tool only as a cross-section in a binary matrix with $r$-rows and $x$-collumns, where the $1$ represent the workpiece and the $0$ represent empty space, we should be able to substract the tool from the workpiece. The new matrix would represent a cross-section of the new workpiece with a cutout resembling the tool. By rotating the Matrix around the $x$-axis, the 3D-form would be computable.
+This would allow to simplify the model further. Representing the workpiece and tool only as a cross-section in a binary matrix with $r$-rows and $x$-collumns, where the $1$ represent the workpiece and the $0$ represent empty space, we should be able to substract the tool from the workpiece. The new matrix would represent a cross-section of the new workpiece with a cutout resembling the tool. By rotating the Matrix around the $x$-axis, the 3D-form would be computable. This is equal to the assumption that all parts of the tool cut at the same depth.
 
 ### Implementation
 #### Slices
@@ -64,6 +64,7 @@ workpice
 \left(\begin{array}{ccc} 
 2&1&2\\
 \end{array}\right)
+$$
 
 The resulting hight-matrix can be used to plot the processed workpiece.
 
@@ -139,13 +140,14 @@ This results in the following plot:
 The results for the cross-section (the 2D-plot) of the workingpiece do work, altough with very low resolution. To up the resolution without relying on interpolation, we would have to add more points to the matrix of the tool.
 Here we are hardware limited, as the matrices for both, workpiece and tool are loaded directly into the RAM of the PC. With possible millions of points to model round corners, a huge amount of RAM could be needed. This is not realistic and would mean high computational cost for a possibly simple render.
 
-## Second approach
+## II. Second approach
 After we communicated with a representative from Modulework, we got to know that the cutting part of tool will always be a torus and could be need in a very high resolution. As this would resemble the worst case for our current algorithm, we opted for a more analytical approach. 
+
 As this analytical approach doesn't impact the symmetry of our workpiece, the same cross-section as seen with the matrices is used.
 
 By defining functions for both the workpiece and the tool, we would be able to compute the height of each object at any position. This would grant us to compute each height individually, not stressing the RAM. Also, the computations remain independet thus being able to still run in parallel, just like the matrices. The resolution could be defined by the amounts of points supplied to the function. As these functions also take values with decimal point, the resolution has a theoretical limit of the maximum float-size of the given PC
 
-### basic algorithm
+### Basic Algorithm
 If the height of the tool is smaller than the height of the workpiece at the same point $x$, we can replace the height of the workpiece at that point with the height of the tool. 
 The desribed logic can be written as:
 ```
@@ -154,6 +156,80 @@ tl = tool(x)
 where wp < tool:
     wp = tool
 ``` 
+
+### Torus is 3D!
+
+We researched the formula for the 3D-Torus and began to plot it. 
+
+$x=(R+r\cdot cos(\phi))\cdot cos(\theta)$
+
+$y=(R+r\cdot cos(\phi))\cdot sin(\theta)$
+
+$z=r\cdot sin(\phi)$
+
+in which the torus is described by two radii: the main radius {large radius R} and the cross-sectional radius {small radius r}. This correlation is given in a spherical coordinate system. With no experience in the spherical coordinate system, we changed to the Cartesian coordinate system as soon as possible. This formula explains the relationship between the coordinates {x,y,z} of a point on the torus (the tool), the radius of the outer ring {R} and the smaller radius {r}.This equation ensures that a point (x, y, z) lies on the surface of the torus exactly when the equation is satisfied. 
+
+Per our basic algorithm it was only necessery to compute the coordinates of the lower half of the torus. This resulted in the following code to generate the half torus:
+
+```
+
+def half_donut(R: int, r: int, scale: int, down = True):
+    # for 0 --> pi the upper half is modeled
+    # for pi --> 2*pi the lower half is modeled
+    # scale = scale / 2 because there would be double the datapoints 
+    # for this model compared to the normal (complete) model otherwise
+    # the down flag is to change wether the upper or lower half is rendered
+
+    scale = int(scale / 2)
+    if(down):
+        theta = np.linspace(np.pi, 2.*np.pi, scale)
+    else:
+        theta = np.linspace(0, np.pi, scale)
+    
+    phi = np.linspace(0, 2.*np.pi, scale)
+
+    theta, phi = np.meshgrid(theta, phi)
+    X = (R + r*np.cos(theta)) * np.cos(phi)
+    Y = (R + r*np.cos(theta)) * np.sin(phi)
+    Z = r * np.sin(theta) 
+    return (X,Y,Z)
+```
+The torus is not defined for values smaller than the inner radius $r§. As this would create unrealistic results, a sub-problem was found. How does a cavity inside a mill change the contour? We will reference this problem in the final conclusion, for now we found the following solution:
+For our proof of concept we changed the rotating object. Instead of rotating the workpiece around the $x$ axis, we would rotate the mill around the $x$-axis. When the mill is lowered until it's center cuts the $x$-axis, it's spinning around itself, creating a sphere. This is equal to the assumption that all parts of the tool cut at the same depth.
+Thus we modeled a ball next, once again cutting it in half to ensure that no more points where generated than actually needed:
+
+```
+def half_ball(coords: (), r: int, scale: int, down=False):
+    # x = r * cos(theta) * sin(phi)
+    # y = r * sin(theta) * sin(phi)
+    # z = r * cos(phi)
+    # 
+    # scale = scale / 2 because there would be double the datapoints 
+    # for this model compared to the normal (complete) model otherwise
+    # the down flag is to change wether the upper or lower half is rendered
+
+    x ,y = coords
+    scale = int(scale / 2)
+
+    theta = np.linspace(0, 2.*np.pi, scale)
+    if(down):
+        phi = np.linspace(0.5*np.pi,np.pi , scale)
+    else:
+        phi = np.linspace(0,0.5*np.pi , scale)
+
+    theta, phi = np.meshgrid(theta, phi)
+
+    X = r * np.cos(theta) * np.sin(phi)
+    Y = r * np.sin(theta) * np.sin(phi)
+    Z = r * np.cos(phi)
+
+    return (X,Y,Z)
+```
+
+As we had difficulties defining the functions to take a known $x$- and $z$-value and retrun the $y$-value, we simplyfied the problem. 
+
+#### Back to 2D
+As the symmetrie remained the same and we still asume that all parts of the tool cut at the same depth, we used slices which we could then rotate again.
 
 ### Implementation
 As the tool function is not defined for values broader than the tool width, it has to return 0 for these values of $x$.
@@ -171,24 +247,3 @@ def circle_fn(pos:(),r: int, x: int):
     
     return (math.sqrt(abs(r - x)) + y_ver ) * -1
 ```
-
-
-### II. Torus Formula
-we researched the formula for the 3D-Torus and began to plot it. 
-
-$x=(R+r\cdot cos(\phi))\cdot cos(\theta)$
-
-$y=(R+r\cdot cos(\phi))\cdot sin(\theta)$
-
-$z=r\cdot sin(\phi)$
-
-in which the torus is described by two radii: the main radius {large radius R} and the cross-sectional radius {small radius r}. We wanted a formal in Cartesian coordinate system sothat it is not dependent on the angles--((sqrt(x^2 + y^2) - R)^2 + z^2) = r^2 this formula explains the relationship between the coordinates {x,y,z} of a point on the torus (the tool), the radius of the outer ring {R} and the smaller radius {r}.This equation ensures that a point (x, y, z) lies on the surface of the torus exactly when the equation is satisfied. We assumed that getting to know if one point on our workpiece is touched by the torus will help us to calculate the change of shapes of our workpiece and how it eventually looks like.
-
-We tried to imagine that the workpiece is in the same coordinate system as the torus-tool and if we bring the coordinate of one point on the workpiece {x,y,z} in the formula, and the formula is rentabel, this means that this point is a touched by the torus. But the flaw of our thought is that there is a hole on the torus and if we calculate one point in that area as 'not touched' by the torus, still it will be influenced by the torus due to the rotation and we still do not know how deep it will be milled.
-
-But meanwhile we got some new clues through the Spherical coordinate system formel, one idea is that if since the workpiece is rotating with infinitive speed, the centerpart of the torus will be milled in a form of hemisphere or an ellipse. The transition between the curves should be smooth enough that we can consider the bottom of the torus which touches the workpiece and the hemisphere as a whole function that affects and eventually forms the milled workpiece. This means that the whole process can be moderated and the resolution shall be choosable.
-
-If we can get the funktion that will work on all forms of tools, the calculations will be optimized and at the same time save storage space and performance.
-
-
-The problem remained to be the illustration as a 3D-model.
