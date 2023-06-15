@@ -138,3 +138,57 @@ This results in the following plot:
 ### Results and Problems
 The results for the cross-section (the 2D-plot) of the workingpiece do work, altough with very low resolution. To up the resolution without relying on interpolation, we would have to add more points to the matrix of the tool.
 Here we are hardware limited, as the matrices for both, workpiece and tool are loaded directly into the RAM of the PC. With possible millions of points to model round corners, a huge amount of RAM could be needed. This is not realistic and would mean high computational cost for a possibly simple render.
+
+## Second approach
+After we communicated with a representative from Modulework, we got to know that the cutting part of tool will always be a torus and could be need in a very high resolution. As this would resemble the worst case for our current algorithm, we opted for a more analytical approach. 
+As this analytical approach doesn't impact the symmetry of our workpiece, the same cross-section as seen with the matrices is used.
+
+By defining functions for both the workpiece and the tool, we would be able to compute the height of each object at any position. This would grant us to compute each height individually, not stressing the RAM. Also, the computations remain independet thus being able to still run in parallel, just like the matrices. The resolution could be defined by the amounts of points supplied to the function. As these functions also take values with decimal point, the resolution has a theoretical limit of the maximum float-size of the given PC
+
+### basic algorithm
+If the height of the tool is smaller than the height of the workpiece at the same point $x$, we can replace the height of the workpiece at that point with the height of the tool. 
+The desribed logic can be written as:
+```
+wp = workpiece(x)
+tl = tool(x)
+where wp < tool:
+    wp = tool
+``` 
+
+### Implementation
+As the tool function is not defined for values broader than the tool width, it has to return 0 for these values of $x$.
+
+```
+
+def circle_fn(pos:(),r: int, x: int):
+    x_ver, y_ver = pos
+    if(x > (r+x_ver)):
+        return 0
+    if(x < (x_ver -r)):
+        return 0
+    r = r*r
+    x = math.pow(x - x_ver,2) 
+    
+    return (math.sqrt(abs(r - x)) + y_ver ) * -1
+```
+
+
+### II. Torus Formula
+we researched the formula for the 3D-Torus and began to plot it. 
+
+$x=(R+r\cdot cos(\phi))\cdot cos(\theta)$
+
+$y=(R+r\cdot cos(\phi))\cdot sin(\theta)$
+
+$z=r\cdot sin(\phi)$
+
+in which the torus is described by two radii: the main radius {large radius R} and the cross-sectional radius {small radius r}. We wanted a formal in Cartesian coordinate system sothat it is not dependent on the angles--((sqrt(x^2 + y^2) - R)^2 + z^2) = r^2 this formula explains the relationship between the coordinates {x,y,z} of a point on the torus (the tool), the radius of the outer ring {R} and the smaller radius {r}.This equation ensures that a point (x, y, z) lies on the surface of the torus exactly when the equation is satisfied. We assumed that getting to know if one point on our workpiece is touched by the torus will help us to calculate the change of shapes of our workpiece and how it eventually looks like.
+
+We tried to imagine that the workpiece is in the same coordinate system as the torus-tool and if we bring the coordinate of one point on the workpiece {x,y,z} in the formula, and the formula is rentabel, this means that this point is a touched by the torus. But the flaw of our thought is that there is a hole on the torus and if we calculate one point in that area as 'not touched' by the torus, still it will be influenced by the torus due to the rotation and we still do not know how deep it will be milled.
+
+But meanwhile we got some new clues through the Spherical coordinate system formel, one idea is that if since the workpiece is rotating with infinitive speed, the centerpart of the torus will be milled in a form of hemisphere or an ellipse. The transition between the curves should be smooth enough that we can consider the bottom of the torus which touches the workpiece and the hemisphere as a whole function that affects and eventually forms the milled workpiece. This means that the whole process can be moderated and the resolution shall be choosable.
+
+If we can get the funktion that will work on all forms of tools, the calculations will be optimized and at the same time save storage space and performance.
+
+
+The problem remained to be the illustration as a 3D-model.
