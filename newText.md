@@ -68,7 +68,7 @@ $$
 
 The resulting hight-matrix can be used to plot the processed workpiece.
 
-![show stair stepping graph]()
+![show stair stepping graph](stair_stepping.png)
 
 The remainging problem is that our final tool would be a torus and our code still cannot visualize round corners perfectly. To get rid of the step shape we implemented a custom smoothing algorithm.
 
@@ -107,17 +107,11 @@ def interpolate(self, raw_form):
 ```
 
 
-![get pic of smooth graph]()
+![get pic of smooth graph](smooth_graph.png)
 
 #### Rotation
 
 The next step is to rotate the slice of the workpiece around it's rotational axis. This was achieved utilizing rotation-matrixes. 
- 
-(entweder oder, nur eins der beiden sachen zeigen)
-
-![rotation matrix Rx(a)](https://mathworld.wolfram.com/images/equations/RotationMatrix/Inline10.svg)
-![rotation matrix Rx(b)](https://mathworld.wolfram.com/images/equations/RotationMatrix/Inline10.svg)
-![rotation matrix Rx(y)](https://mathworld.wolfram.com/images/equations/RotationMatrix/Inline10.svg)
 
 ```
     def rotate(self, t):
