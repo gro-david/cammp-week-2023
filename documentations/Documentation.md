@@ -512,6 +512,11 @@ In reality, the points along the $y$-axis dont penetrate as deep and thus also c
 
 To resolve this issue, we would like to define the given solution as only applicable for tools without an invagination. This is because these tools are not limited by the $y$-axis, as the material not cut at an outer position would still be cut at an more inward position.
 
+## 3rd Approach
+With the second approach it schould have been possible to account for the curvature of the cylider. Mathematically it is very simple (Pythagoras), and with our logic we just needed to move our tool upwards with the y offset we just calculated using the Pythagorean theorem. We are offsetting the tool and not the cylinder because we defined x axis as the rotation axis, and it would have been more complicated to move the slice. The results didnt look anything like it should have:
+![wierd_results](weird_results.png)
+Because we evaluated that this approach has many problems (slice calculation, y offset...), we decided that debugging or rewriting this would be very complicated, we planned the 3rd approach to be closer to the reality. We too the mill as a 3D object (torus) and tried to rotate the slice through it, calculate the overlap and cut out these parts. We unfortunately couldn't finish this because of the missing of good 3D libraries, and time reasons.  
+
 ## Conclusion
 The first approach was easy to implement and allowed for fast iteration of our ideas, but yielded bad resolution and performance parameters. The second approach solved both of these issues and revealed underlying problems with our models. 
 Still, we managed to come up with a model which can be applied for tools without an invagination at the bottom. The resulting cross-sections for these graphs can be rendered in parallel, with low memory-usage and a chosen resolution. Also an upscaling to a 3D-model is possible!
