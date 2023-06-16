@@ -127,8 +127,8 @@ The next step is to rotate the slice of the workpiece around it's rotational axi
         return self
 ```
 
-This results in the following plot:
-![Fehlender Plot!]()
+This results in the following plot (this plot is not generated from the above given graphs!):
+![3D-Plot](3D_Plot.png)
 
 ### Results and Problems
 The results for the cross-section (the 2D-plot) of the workingpiece do work, altough with very low resolution. To up the resolution without relying on interpolation, we would have to add more points to the matrix of the tool.
@@ -508,7 +508,7 @@ Let's assume that instead of spinning the workpiece, we spun the tool around the
 
 In reality, the points along the $y$-axis dont penetrate as deep and thus also cut less from the material. Thus results in an eliptic curvature between the deepest cutting points of the tool
 
-![show cross sectrion from module works]()
+![show cross sectrion from module works](cross_section.jpg)
 
 To resolve this issue, we would like to define the given solution as only applicable for tools without an invagination. This is because these tools are not limited by the $y$-axis, as the material not cut at an outer position would still be cut at an more inward position.
 
